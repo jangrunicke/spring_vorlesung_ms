@@ -1,0 +1,15 @@
+{
+  "name": "!?",
+  "dozent": {
+    "vorname": "Max",
+    "nachname": "Mustermann"
+  },
+  "raum": {
+    "gebaeude": "M",
+    "raumnummer": "306"
+  },
+  "user": {
+    "username": "test",
+    "password": "p"
+  }
+}

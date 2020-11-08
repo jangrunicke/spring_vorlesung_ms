@@ -1,0 +1,382 @@
+# -----------------------------------------------------------------
+# C o n f i g   S e r v e r
+# -----------------------------------------------------------------
+
+### Konfigurationsdaten fuer das Profil "dev"
+https://{{config-host}}/kunde/dev
+Authorization: {{basic-auth-admin}}
+
+### REST-Schnittstelle vom Config-Server
+https://{{config-host}}/actuator
+Authorization: {{basic-auth-admin}}
+
+### Config-Server herunterfahren
+POST https://{{config-host}}/actuator/shutdown
+Authorization: {{basic-auth-admin}}
+
+### Beans vom Config-Server
+#https://{{config-host}}/actuator/beans
+#Authorization: {{basic-auth-admin}}
+
+# -----------------------------------------------------------------
+# v o r l e s u n g
+# -----------------------------------------------------------------
+
+### Suche alle Vorlesungen
+https://{{host}}
+Accept: application/hal+json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+# ALPN: h2, http%2F1.1
+
+### Suche alle Vorlesungen mit falschem Passwort: 401 (Unauthorized)
+https://{{host}}
+Authorization: {{basic-auth-admin-falsch}}
+ALPN: h2
+
+### Suche alle Vorlesungen mit fehlenden Rechten: 403 (Forbidden)
+https://{{host}}
+Authorization: {{basic-auth-alpha1}}
+ALPN: h2
+
+### Suche mit vorhandener Vorlesungs-ID als admin
+https://{{host}}/00000000-0000-0000-0000-000000000001
+Accept: application/hal+json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche mit ungueltiger Vorlesungs-ID
+https://{{host}}/YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY
+Accept: application/hal+json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche mit nicht-vorhandener Vorlesung-ID
+https://{{host}}/99999999-9999-9999-9999-999999999999
+Accept: application/hal+json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche mit falschem Passwort: 401 (Unauthorized)
+https://{{host}}/00000000-0000-0000-0000-000000000001
+Accept: application/hal+json
+Authorization: Basic {{basic-auth-admin-falsch}}
+ALPN: h2
+
+### Suche mit vorhandener Vorlesung-ID als vorlesung
+https://{{host}}/00000000-0000-0000-0000-000000000001
+Accept: application/hal+json
+Authorization: {{basic-auth-alpha1}}
+ALPN: h2
+
+### Suche mit fehlender Berechtigung: 403 (Forbidden)
+https://{{host}}/00000000-0000-0000-0000-000000000002
+Accept: application/hal+json
+Authorization: {{basic-auth-alpha1}}
+ALPN: h2
+
+### Suche mit vorhandener Vorlesung-ID und ETag
+https://{{host}}/00000000-0000-0000-0000-000000000001
+Accept: application/hal+json
+If-None-Match: "0"
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche mit vorhandener Vorlesung-ID und falschem ETag
+https://{{host}}/00000000-0000-0000-0000-000000000001
+Accept: application/hal+json
+If-None-Match: 0
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche mit vorhandenem Namen
+https://{{host}}/?name=Rechnungswesen
+Accept: application/hal+json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Streaming mit allen Vorlesungen
+https://{{host}}
+Accept: text/event-stream
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Eine neuen Vorlesung anlegen
+POST https://{{host}}
+Content-Type: application/json
+ALPN: h2
+
+< vorlesung-neu.json
+
+### Einen neue Vorlesung mit ungueltigen Daten versuchen anzulegen
+POST https://{{host}}
+Content-Type: application/json
+ALPN: h2
+
+< vorlesung-neu-invalid.json
+
+### Einen Vorlesung mittels PUT aktualisieren
+PUT https://{{host}}/00000000-0000-0000-0000-000000000001
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+< vorlesung-put.json
+
+### Einen Vorlesung mittels PUT und ungueltigen Daten aktualisieren
+PUT https://{{host}}/00000000-0000-0000-0000-000000000001
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+< vorlesung-put-invalid.json
+
+### Eine Vorlesung mittels PUT und falschem Passwort aktualisieren: 401 (Unauthorized)
+PUT https://{{host}}/00000000-0000-0000-0000-000000000001
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin-falsch}}
+ALPN: h2
+
+< vorlesung-put.json
+
+### Löschen mit vorhandener Vorlesungs-ID
+DELETE https://{{host}}/00000000-0000-0000-0000-000000000000
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Löschen mit nicht-vorhandener Vorlesung-ID
+DELETE https://{{host}}/FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Löschen mit vorhandener Vorlesung-ID und falschem Passwort: 401 (Unauthorized)
+DELETE https://{{host}}/00000000-0000-0000-0000-000000000004
+Authorization: {{basic-auth-admin-falsch}}
+ALPN: h2
+
+### Löschen mit vorhandener Vorlesungung-ID und fehlenden Rechten: 403 (Forbidden)
+DELETE https://{{host}}/00000000-0000-0000-0000-000000000004
+Authorization: {{basic-auth-alpha1}}
+ALPN: h2
+
+### Löschen mit vorhandenem Namen
+DELETE https://{{host}}/?email=software architektur
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Löschen mit nicht vorhandenem Namen
+DELETE https://{{host}}/?name=does%40not.exist
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+
+# -----------------------------------------------------------------
+# P r a e f i x e   u n d   V e r s i o n e n (SWE)
+# -----------------------------------------------------------------
+
+### Suche Nachnamen mit Praefix
+https://{{host}}/nachname/a
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche Emailadressen mit Praefix
+https://{{host}}/email/al
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Suche Version zu Kunde-ID
+https://{{host}}/version/00000000-0000-0000-0000-000000000001
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+### Alle Rollen ermitteln
+https://{{host}}/auth/rollen
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+# -----------------------------------------------------------------
+# A c t u a t o r
+# -----------------------------------------------------------------
+
+### Uebersicht
+https://{{actuator}}
+Authorization: {{basic-auth-admin}}
+
+### Status (erfordert Client fuer MongoDB)
+https://{{actuator}}/info
+Authorization: {{basic-auth-admin}}
+
+### Health
+https://{{actuator}}/health
+Authorization: {{basic-auth-admin}}
+
+### Features
+https://{{actuator}}/features
+Authorization: {{basic-auth-admin}}
+
+### Spring Beans
+https://{{actuator}}/beans
+Authorization: {{basic-auth-admin}}
+
+### Configuration Properties
+https://{{actuator}}/configprops
+Authorization: {{basic-auth-admin}}
+
+### Umgebung und Properties
+https://{{actuator}}/env
+Authorization: {{basic-auth-admin}}
+
+### Property server.port
+https://{{actuator}}/env/server.port
+Authorization: {{basic-auth-admin}}
+
+### Property server.ssl.protocol
+https://{{actuator}}/env/server.ssl.protocol
+Authorization: {{basic-auth-admin}}
+
+### Shutdown
+POST https://{{actuator}}/shutdown
+Authorization: {{basic-auth-admin}}
+Content-Type: application/json
+
+### Restart (nur Shutdown :-(
+POST https://{{actuator}}/restart
+Authorization: {{basic-auth-admin}}
+
+### Beispiel 3: Abfrage ueber den Status der Instanz beim Registry-Server (401 :-(
+http://{{host}}/service-registry/instance-status
+Authorization: {{basic-auth-admin}}
+
+# -----------------------------------------------------------------
+# R e g i s t r y   S e r v e r   (Beispiel 3)
+# -----------------------------------------------------------------
+
+### Registrierte Services
+https://{{consul-host}}/v1/agent/services
+
+### Service "kunde"
+https://{{consul-host}}/v1/agent/service/kunde-8444
+
+### "Service Health" fuer Service mit Name "kunde"
+https://{{consul-host}}/v1/agent/health/service/name/kunde
+
+### "Service Health" fuer Service mit ID "kunde-8444"
+https://{{consul-host}}/v1/agent/health/service/id/kunde-8444
+
+### Service "bestellung"
+https://{{consul-host}}/v1/agent/service/bestellung-8445
+
+### Registrierte Checks
+https://{{consul-host}}/v1/agent/checks
+
+### Service "config"
+http://{{consul-host}}/v1/agent/service/config-8888
+
+### "Service Health" fuer Service mit Name "config"
+http://{{consul-host}}/v1/agent/health/service/name/config
+
+### "Service Health" fuer Service mit ID "config-8888"
+http://{{consul-host}}/v1/agent/health/service/id/config-8888
+
+# -----------------------------------------------------------------
+# O P T I O N S, H E A D
+# -----------------------------------------------------------------
+
+#OPTIONS https://{{host}}
+#Authorization: {{basic-auth-admin}}
+#ALPN: h2
+
+###
+
+#HEAD https://{{host}}
+#Authorization: {{basic-auth-admin}}
+#ALPN: h2
+
+### Zu einem vorhandenen Kunden ein PNG-Bild hochladen
+PUT https://{{host}}/multimedia/00000000-0000-0000-0000-000000000001
+Authorization: {{basic-auth-admin}}
+Content-Type: image/png
+
+< ./image.png
+
+### Zu einem vorhandenen Kunden ein JPEG-Bild hochladen
+PUT https://{{host}}/multimedia/00000000-0000-0000-0000-000000000001
+Authorization: {{basic-auth-admin}}
+Content-Type: image/jpeg
+
+< ./image.jpg
+
+### Zu einem vorhandenen Kunden ein Bild als Multipart hochladen
+PUT https://{{host}}/multimedia/00000000-0000-0000-0000-000000000001 HTTP/1.1
+Authorization: {{basic-auth-admin}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="image.png"; Content-Type="image/png"
+
+< ./image.png
+--boundary
+
+### Zu einem vorhandenen Kunden ein Bild (binaer!!!) herunterladen
+GET https://{{host}}/multimedia/00000000-0000-0000-0000-000000000001
+Authorization: {{basic-auth-admin}}
+Accept: image/*
+
+### Einen Kunden mittels PATCH aktualisieren
+PATCH https://{{host}}/00000000-0000-0000-0000-000000000003
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+[
+  { "op": "replace", "path": "/nachname", "value": "Neuernameput" },
+  { "op": "replace", "path": "/email", "value": "new.email@test.deput" },
+  { "op": "add", "path": "/interessen", "value": "S" },
+  { "op": "remove", "path": "/interessen", "value": "L" }
+]
+
+### Einen Kunden mittels PATCH und ungueltigen Daten aktualisieren
+PATCH https://{{host}}/00000000-0000-0000-0000-000000000003
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin}}
+ALPN: h2
+
+[
+  { "op": "replace", "path": "/email", "value": "emailungueltig@" }
+]
+
+### Einen Kunden mittels PATCH und falschem Passwort aktualisieren: 401 (Unauthorized)
+PATCH https://{{host}}/00000000-0000-0000-0000-000000000001
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-admin-falsch}}
+ALPN: h2
+
+[
+  { "op": "replace", "path": "/nachname", "value": "Neuername" },
+  { "op": "replace", "path": "/email", "value": "new.email@test.de" },
+  { "op": "add", "path": "/interessen", "value": "R" },
+  { "op": "remove", "path": "/interessen", "value": "L" }
+]
+
+### Einen Kunden mittels PATCH und fehlenden Rechten aktualisieren: 403 (Forbidden)
+PATCH https://{{host}}/00000000-0000-0000-0000-000000000001
+If-Match: "0"
+Content-Type: application/json
+Authorization: {{basic-auth-alpha1}}
+ALPN: h2
+
+[
+  { "op": "replace", "path": "/nachname", "value": "Neuername" },
+  { "op": "replace", "path": "/email", "value": "new.email@test.de" },
+  { "op": "add", "path": "/interessen", "value": "R" },
+  { "op": "remove", "path": "/interessen", "value": "L" }
+]
+
+###
+

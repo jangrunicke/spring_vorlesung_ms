@@ -1,0 +1,56 @@
+# Copyright (C) 2018 - present Juergen Zimmermann, Hochschule Karlsruhe
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+logging:
+  # https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-logging-file-output
+  file.name: build/logs/application.log
+  level:
+    # Log-Level fuer Klassen im Package de.hska (einschl. Unter-Packages)
+    # TRACE beinhaltet auch DEBUG, INFO, WARN, ERROR, FATAL
+    de.hska: TRACE
+    io.github.resilience4j.utils.RxJava2OnClasspathCondition: WARN
+
+    org:
+      springframework:
+        boot.devtools.autoconfigure.ConditionEvaluationDeltaLoggingListener: WARN
+        # data.r2dbc: DEBUG
+        http.codec.json.Jackson2JsonEncoder: DEBUG
+        security.core:
+          userdetails.User: ERROR
+          # SpringSecurityCoreVersion: ERROR
+        web.server.adapter.HttpWebHandlerAdapter: DEBUG
+        # data.mongodb.core.MongoTemplate: DEBUG
+        cloud:
+          loadbalancer.core.RoundRobinLoadBalancer: ERROR
+          # sleuth
+
+      mongodb.driver.cluster: WARN
+
+      apache.kafka.clients:
+        producer.ProducerConfig: WARN
+        # NetworkClient: ERROR
+
+      hibernate.validator.internal.xml:
+        ValidationXmlParser: WARN
+        ValidationBootstrapParameters: WARN
+
+      junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils: WARN
+
+    # reactor.netty.http.client: DEBUG
+
+kunde:
+  # SonarQube "Credentials should not be hard-coded"
+  password: p
+  passwordFalsch: Falsch
